@@ -1,0 +1,29 @@
+import java_cup.runtime.*;
+import java.io.*;
+
+// Código adicional para inicializar o parser
+parser code {:
+    scanner s;
+    parser(scanner s) { this.s = s; } // Construtor do parser que aceita o scanner
+:}
+
+// Definindo a integração do scanner com CUP
+scan with {:
+    return s.next_token(); // Retorna o próximo token gerado pelo scanner
+:};
+
+// Terminais definidos pelo analisador léxico
+terminal KEYWORD, IDENTIFICADOR, OPERADOR, DELIMITADOR;
+terminal Integer NUMERO_INT;
+terminal Double NUMERO_FLOAT;
+
+// Não terminais
+non terminal program;
+non terminal stmt_list, stmt;
+non terminal expr;
+
+program ::= stmt_list;
+
+stmt_list ::= stmt_list stmt
+            | stmt
+            ;

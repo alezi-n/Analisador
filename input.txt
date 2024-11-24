@@ -1,0 +1,9 @@
+int x = 10;
+float y = 3.14;
+
+if (x > 5) {
+    y = x + 2;
+    // Comentário de uma linha
+    /* Comentário
+       de várias linhas */
+}
