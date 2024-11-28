@@ -22,7 +22,7 @@ non terminal program;
 non terminal stmt_list, stmt;
 non terminal expr;
 
-program ::= stmt_list {: System.out.println("OIIIIIII3");  :}
+program ::= stmt_list {: System.out.println("OIIIIIII3");       :}
 ; 
 
 stmt_list ::= KEYWORD {: System.out.println("KEYWORD encontrado no parser!"); :}
