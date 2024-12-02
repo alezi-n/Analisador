@@ -4,7 +4,6 @@
 //----------------------------------------------------
 
 import java_cup.runtime.*;
-import java.io.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -31,7 +30,7 @@ public class parser extends java_cup.runtime.lr_parser {
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
     "\000\005\000\002\002\003\000\002\002\004\000\002\003" +
-    "\003\000\002\003\004\000\002\003\003" });
+    "\007\000\002\004\003\000\002\004\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -39,9 +38,11 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\007\000\004\004\006\001\002\000\004\002\011\001" +
-    "\002\000\004\002\ufffd\001\002\000\004\002\uffff\001\002" +
-    "\000\004\002\001\001\002\000\004\002\ufffe\001\002\000" +
+    "\000\013\000\004\005\006\001\002\000\004\002\015\001" +
+    "\002\000\004\002\001\001\002\000\004\006\007\001\002" +
+    "\000\004\007\010\001\002\000\006\012\013\013\011\001" +
+    "\002\000\004\010\ufffd\001\002\000\004\010\014\001\002" +
+    "\000\004\010\ufffe\001\002\000\004\002\uffff\001\002\000" +
     "\004\002\000\001\002" });
 
   /** Access to parse-action table. */
@@ -50,9 +51,11 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\007\000\010\002\003\003\006\004\004\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\004" +
-    "\004\007\001\001\000\002\001\001\000\002\001\001" });
+    "\000\013\000\006\002\003\003\004\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\004\004\011\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -94,9 +97,7 @@ public class parser extends java_cup.runtime.lr_parser {
   public java_cup.runtime.Symbol scan()
     throws java.lang.Exception
     {
-
-    return s.next_token(); // Retorna o próximo token gerado pelo scanner
-
+ return s.next_token(); 
     }
 
 
@@ -129,10 +130,10 @@ class CUP$parser$actions {
       switch (CUP$parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // program ::= stmt_list 
+          case 0: // program ::= var 
             {
               Object RESULT =null;
-		 System.out.println("OIIIIIII3");       
+		 System.out.println("Programa processado com sucesso!"); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -152,29 +153,46 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // stmt_list ::= KEYWORD 
+          case 2: // var ::= TIPO IDENTIFICADOR IGUALDADE valor DELIMITADOR 
             {
               Object RESULT =null;
-		 System.out.println("KEYWORD encontrado no parser!"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("stmt_list",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
+		int ileft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object i = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int vleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object v = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		 
+    System.out.println("Declaração de variável: " + t + " " + i + " = " + v); 
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("var",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // stmt_list ::= stmt_list stmt 
+          case 3: // valor ::= NUMERO_INT 
             {
               Object RESULT =null;
-		 System.out.println("OIIIIIII");       
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("stmt_list",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		int ileft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Integer i = (Integer)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = i; System.out.println("Valor inteiro: " + i); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("valor",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // stmt_list ::= stmt 
+          case 4: // valor ::= NUMERO_FLOAT 
             {
               Object RESULT =null;
-		 System.out.println("OIIIIIII2");        
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("stmt_list",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double f = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = f; System.out.println("Valor float: " + f); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("valor",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 

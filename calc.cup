@@ -1,5 +1,5 @@
+// Importação necessária para integração com JFlex
 import java_cup.runtime.*;
-import java.io.*;
 
 // Código adicional para inicializar o parser
 parser code {:
@@ -7,25 +7,27 @@ parser code {:
     parser(scanner s) { this.s = s; } // Construtor do parser que aceita o scanner
 :}
 
-// Definindo a integração do scanner com CUP
-scan with {:
-    return s.next_token(); // Retorna o próximo token gerado pelo scanner
-:};
+// Integração com o scanner
+scan with {: return s.next_token(); :};
 
 // Terminais definidos pelo analisador léxico
-terminal KEYWORD, IDENTIFICADOR, OPERADOR, DELIMITADOR;
+terminal KEYWORD, TIPO, IDENTIFICADOR, IGUALDADE, DELIMITADOR, OPERADOR;
 terminal Integer NUMERO_INT;
 terminal Double NUMERO_FLOAT;
 
 // Não terminais
 non terminal program;
-non terminal stmt_list, stmt;
-non terminal expr;
+non terminal var;
+non terminal valor;
 
-program ::= stmt_list {: System.out.println("OIIIIIII3");       :}
-; 
+// Produção principal
+program ::= var+ {: System.out.println("Programa processado com sucesso!"); :};
 
-stmt_list ::= KEYWORD {: System.out.println("KEYWORD encontrado no parser!"); :}
-            | stmt_list stmt  {: System.out.println("OIIIIIII");       :}
-            | stmt {: System.out.println("OIIIIIII2");        :}
-            ;
+// Produção para declaração de variáveis
+var ::= TIPO:t IDENTIFICADOR:i IGUALDADE valor:v DELIMITADOR {: 
+    System.out.println("Declaração de variável: " + t + " " + i + " = " + v); 
+:};
+
+// Produção para valores
+valor ::= NUMERO_INT:i {: RESULT = i; System.out.println("Valor inteiro: " + i); :}
+        | NUMERO_FLOAT:f {: RESULT = f; System.out.println("Valor float: " + f); :};
