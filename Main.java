@@ -1,5 +1,5 @@
 import java.io.*;
-import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -9,7 +9,7 @@ public class Main {
             scanner scanner = new scanner(input);
             parser parse = new parser(scanner);
 
-            System.out.println("Iniciando análise...");
+            System.out.println("Iniciando processoo...");
 
             // Processar a entrada
             parse.parse();
@@ -18,8 +18,10 @@ public class Main {
 
             // Etapa 1
             // Ler todos os tokens do arquivo de entrada
-            // while (scanner.next_token().sym != sym.EOF) {
-            //     System.out.println(scanner.next_token());
+            // Symbol s = scanner.next_token();
+            // while (s.sym != sym.EOF) {
+            // System.out.println(s.value);
+            // s = scanner.next_token();
             // }
 
         } catch (FileNotFoundException e) {
