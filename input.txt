@@ -1,3 +1,4 @@
-public void texto (int a) {
+public void texto (int a, int b) {
   int y = 300;
+
 }

@@ -33,37 +33,41 @@ terminal Double NUMERO_FLOAT;
 
 // Não terminais
 non terminal program, statements, statement, statement_function;
-non terminal function, variavel, decl_call_function, decl_parametros, decl_if ; 
-non terminal condicional;
-non terminal parametro;
-non terminal bloco;
-non terminal termo;
-non terminal valor;
-non terminal tipo;
-non terminal tipoFunction;
-non terminal operadores;
-non terminal operadoresMath;
-non terminal parentese, chaves;
+non terminal decl_function, decl_variavel, decl_call_function, decl_parametros, decl_if ;
+non terminal variavel, function;
+
+non terminal parametro, bloco, condicional;
+non terminal termo, valor;
+non terminal tipo, tipoFunction;
+non terminal operadores, operadoresMath;
 
 // Produção principal
 program ::= statements {: System.out.println("Program"); :}
         ;
 
-statements ::= statements statement {: System.out.println("statements____"); :}
-        | statement {: System.out.println("statements"); :}
+statements ::= statements statement {: System.out.println("Statements múltiplos"); :}
+        | statement {: System.out.println("Único statement"); :}
         ;
 
-statement ::= function {: System.out.println("statement_function"); :}
-        | variavel {: System.out.println("statement_variavel"); :}
+statement ::= decl_function {: System.out.println("statement_function"); :}
+        | decl_variavel {: System.out.println("statement_variavel"); :}
         | decl_call_function {: System.out.println("statement_call"); :}
         ;
 
-function ::= tipoFunction tipo parentese decl_parametros parentese {: System.out.println("function"); :}
+decl_variavel ::= variavel:v {: System.out.println(v); :}
+        ;
+
+decl_function ::= function:f {: System.out.println(f); :}
+        ;
+
+variavel ::= tipo:t IDENTIFICADOR:i IGUALDADE valor:v DL_END {: RESULT = "Declaração de variável: " + t + " " + i + " = " + v; :}
+        ;
+
+function ::= tipoFunction:t tipo:r IDENTIFICADOR:i DL_LPAREN decl_parametros DL_RPAREN bloco {: RESULT = "Declaração de função: " + t + " " + r + " " + i; :}
         ;
 
 decl_parametros ::= parametro DL_VIRGUL parametro {: System.out.println("decl_parametros-2"); :} 
-        | parametro:x {: RESULT = x; System.out.println("decl_parametros-1"); :} 
-        | 
+        | parametro:x {: RESULT = x; System.out.println("decl_parametros-1"); :}
         ;
 
 parametro ::= tipo:t IDENTIFICADOR:i {: RESULT = t + " " + i;  System.out.println("parametros"); :}
@@ -71,7 +75,7 @@ parametro ::= tipo:t IDENTIFICADOR:i {: RESULT = t + " " + i;  System.out.printl
 
 statement_function ::= statement_function decl_if | decl_if;
 
-decl_if ::= KEY_IF parentese condicional parentese bloco
+decl_if ::= KEY_IF DL_LPAREN condicional DL_RPAREN bloco
         | decl_if KEY_ELSE bloco
         ;
 
@@ -82,10 +86,7 @@ termo ::= IDENTIFICADOR:t {: RESULT = t; System.out.println("termo:" + t); :}
         | valor:t {: RESULT = t; System.out.println("termo:" + t); :}
         ;
 
-bloco ::= chaves statements chaves {: System.out.println("bloco"); :}
-        ;
-
-variavel ::= tipo:t IDENTIFICADOR:i IGUALDADE valor:v DL_END {: System.out.println("Declaração de variável: " + t + " " + i + " = " + v); :}
+bloco ::= DL_LCHAVE statements DL_RCHAVE {: System.out.println("bloco"); :}
         ;
 
 valor ::= NUMERO_INT:v {: System.out.println("Valor inteiro: " + v); RESULT = v; :}
@@ -115,12 +116,4 @@ operadores ::= OP_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :
         | OP_MAIORQ:r {: RESULT = r; System.out.println("Operador: " + r); :}
         | OP_MAIOR_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :}
         | OP_MENOR_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :}
-        ;
-
-parentese ::= DL_LPAREN:r {: RESULT = r; System.out.println("Parentese: " + r); :}
-        | DL_RPAREN:r {: RESULT = r; System.out.println("Parentese: " + r); :}
-        ;
-
-chaves ::= DL_LCHAVE:r {: RESULT = r; System.out.println("Chaves: " + r); :}
-        | DL_RPAREN:r {: RESULT = r; System.out.println("Chaves: " + r); :}
         ;
