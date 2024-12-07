@@ -1,4 +1,22 @@
 public void texto (int a, int b) {
+
+  // Declaração de Variável
   int y = 300;
 
+  // Declaração de Verificação
+  if (a > b) {
+    return y;
+  } else {
+    return x;
+  }
+
+  // Declaração de Laço de Repetição
+  for (int i = x;i < t ; i++) {
+    a = b + y;
+    y = a + b;
+  }
+
+  while (a < b) {
+    a++;
+  }
 }

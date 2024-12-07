@@ -10,110 +10,133 @@ parser code {:
 // Definindo a integração do scanner com CUP
 scan with {:
         return s.next_token(); 
-        :};
+:};
 
-// Terminais definidos pelo analisador léxico
-terminal ESPACO_BRANCO;
-terminal String IDENTIFICADOR, TIPO_INT, TIPO_FLOAT, TIPO_STRING, TIPO_BOOL, KEY_VOID;
+// Terminais definidos pelo analisador léxico 
+terminal String IDENTIFICADOR; 
 
-// PALAVRAS-CHAVE
-terminal String KEY_IF, KEY_ELSE, KEY_WHILE, KEY_FOR, KEY_CLASS, KEY_PUBLIC, KEY_PRIVATE, KEY_RETURN;
+// TIPOS 
+terminal String TIPO_INT, TIPO_FLOAT, TIPO_STRING, TIPO_BOOL; 
 
-// OPERADORES
-terminal String OP_MAIS, OP_MINUS, OP_MULTI, OP_DIVI, OP_IGUAL, OP_DIFE, OP_MENORQ, OP_MAIORQ, OP_MAIOR_IGUAL, OP_MENOR_IGUAL, IGUALDADE;
+// PALAVRAS-CHAVE 
+terminal String KEY_IF, KEY_ELSE, KEY_FOR, KEY_WHILE, KEY_PUBLIC, KEY_PRIVATE, KEY_RETURN, KEY_VOID; 
 
-// DELIMITADORES
-terminal String DL_END, DL_LPAREN, DL_RPAREN, DL_LCHAVE, DL_RCHAVE, DL_VIRGUL;
+// OPERADORES 
+terminal String OP_MAIS, OP_MINUS, OP_MULTI, OP_DIVI, OP_IGUAL, OP_DIFE, OP_MENORQ, OP_MAIORQ, OP_MAIOR_IGUAL, OP_MENOR_IGUAL, IGUALDADE; 
 
-// Comentários
-terminal COMENT_SINGLE, COMENT_MULTI;
+// DELIMITADORES 
+terminal String DL_END, DL_LPAREN, DL_RPAREN, DL_LCHAVE, DL_RCHAVE, DL_VIRGUL; 
 
-terminal Integer NUMERO_INT;
-terminal Double NUMERO_FLOAT;
+// NUMEROS
+terminal Integer NUMERO_INT; 
+terminal Double NUMERO_FLOAT; 
 
-// Não terminais
-non terminal program, statements, statement, statement_function;
-non terminal decl_function, decl_variavel, decl_call_function, decl_parametros, decl_if ;
-non terminal variavel, function;
+// Não terminais 
+non terminal program, statements, statement; 
+non terminal decl_function, decl_variavel, decl_parametros, decl_if, decl_laco_repeticao; 
+non terminal variavel, function, casos_if; 
+non terminal parametro, bloco, condicional, retorno; 
+non terminal termos, valor, expressao; 
+non terminal tipo, tipo_function; 
+non terminal operacoes, operadores, operadores_math; 
 
-non terminal parametro, bloco, condicional;
-non terminal termo, valor;
-non terminal tipo, tipoFunction;
-non terminal operadores, operadoresMath;
-
-// Produção principal
-program ::= statements {: System.out.println("Program"); :}
+// Produção principal 
+program ::= statements {: System.out.println("Program"); :} 
         ;
 
-statements ::= statements statement {: System.out.println("Statements múltiplos"); :}
-        | statement {: System.out.println("Único statement"); :}
-        ;
+statements ::= statements statement {: System.out.println("Statements múltiplos"); :} 
+        | statement {: System.out.println("Único statement"); :} 
+        ; 
 
-statement ::= decl_function {: System.out.println("statement_function"); :}
-        | decl_variavel {: System.out.println("statement_variavel"); :}
-        | decl_call_function {: System.out.println("statement_call"); :}
-        ;
+statement ::= decl_function {: System.out.println("statement_function"); :} 
+        | decl_variavel {: System.out.println("statement_variavel"); :} 
+        | decl_if {: System.out.println("statement_if"); :} 
+        | decl_laco_repeticao {: System.out.println("statement_laco_repeticao"); :} 
+        | retorno {: System.out.println("statement_retorno"); :} 
+        | expressao DL_END {: System.out.println("statement_expressao"); :} 
+        ; 
 
-decl_variavel ::= variavel:v {: System.out.println(v); :}
-        ;
+// VARIAVEL 
+decl_variavel ::= variavel:v DL_END {: System.out.println(v); :} 
+        ; 
 
-decl_function ::= function:f {: System.out.println(f); :}
-        ;
+variavel ::= tipo:t IDENTIFICADOR:i IGUALDADE termos:v {: RESULT = "Identificou a variável: " + t + " " + i + " = " + v + ";"; :} 
+        ; 
 
-variavel ::= tipo:t IDENTIFICADOR:i IGUALDADE valor:v DL_END {: RESULT = "Declaração de variável: " + t + " " + i + " = " + v; :}
-        ;
+// FUNCTION 
+decl_function ::= function:f {: System.out.println(f); :} 
+        ; 
 
-function ::= tipoFunction:t tipo:r IDENTIFICADOR:i DL_LPAREN decl_parametros DL_RPAREN bloco {: RESULT = "Declaração de função: " + t + " " + r + " " + i; :}
-        ;
+function ::= tipo_function:t tipo:r IDENTIFICADOR:i DL_LPAREN decl_parametros:p DL_RPAREN bloco {: RESULT = "Identificou a função: " + t + " " + r + " " + i + "(" + p +") { }" ; :} 
+        ; 
+        
+// PARAMETROS 
+decl_parametros ::= parametro:x DL_VIRGUL parametro:y {: RESULT = x + ", " + y; System.out.println("Parametros: " + x + ", " + y); :} 
+        | parametro:x {: RESULT = x; System.out.println("Parametro: " + x); :} 
+        ; 
 
-decl_parametros ::= parametro DL_VIRGUL parametro {: System.out.println("decl_parametros-2"); :} 
-        | parametro:x {: RESULT = x; System.out.println("decl_parametros-1"); :}
-        ;
+parametro ::= tipo:t IDENTIFICADOR:i {: RESULT = t + " " + i; System.out.println("Identificou o parametro: " + t + " " + i); :} 
+        ; 
 
-parametro ::= tipo:t IDENTIFICADOR:i {: RESULT = t + " " + i;  System.out.println("parametros"); :}
-        ;
+// IF 
+decl_if ::= casos_if bloco KEY_ELSE bloco {: System.out.println("decl_if_com_else"); :} 
+        | casos_if bloco {: System.out.println("decl_if11"); :} 
+        ; 
 
-statement_function ::= statement_function decl_if | decl_if;
+casos_if ::= KEY_IF DL_LPAREN condicional DL_RPAREN {: System.out.println("casos_if"); :} 
+        ; 
 
-decl_if ::= KEY_IF DL_LPAREN condicional DL_RPAREN bloco
-        | decl_if KEY_ELSE bloco
-        ;
+// LACO DE REPETICAO 
+decl_laco_repeticao ::= KEY_FOR DL_LPAREN variavel DL_END condicional DL_END expressao DL_RPAREN bloco {: System.out.println("Identificou o laço 'for' de repetição;"); :} 
+        | KEY_WHILE DL_LPAREN condicional DL_RPAREN bloco {: System.out.println("Identificou o laço 'while' de repetição;"); :} 
+        ; 
 
-condicional ::= termo operadores termo {: System.out.println("condicional"); :}
-        ;
+condicional ::= termos operadores termos {: System.out.println("condicional"); :} 
+        ; 
 
-termo ::= IDENTIFICADOR:t {: RESULT = t; System.out.println("termo:" + t); :}
-        | valor:t {: RESULT = t; System.out.println("termo:" + t); :}
-        ;
+termos ::= IDENTIFICADOR:t {: RESULT = t; System.out.println("Termo:" + t); :} 
+        | valor:t {: RESULT = t; System.out.println("Termo:" + t); :} 
+        ; 
 
-bloco ::= DL_LCHAVE statements DL_RCHAVE {: System.out.println("bloco"); :}
-        ;
+retorno ::= KEY_RETURN termos:x DL_END {: System.out.println("Identificou o retorno: return " + x + ";"); :} 
+        ; 
+        
+expressao ::= IDENTIFICADOR:x OP_MAIS OP_MAIS {: System.out.println("Identificou a expressão: " + x + "++;"); :} 
+        | IDENTIFICADOR:x IGUALDADE operacoes:y {: System.out.println("Identificou a expressão: " + x + " = " + y + " ;"); :} 
+        ; 
 
-valor ::= NUMERO_INT:v {: System.out.println("Valor inteiro: " + v); RESULT = v; :}
-        | NUMERO_FLOAT:v {: System.out.println("Valor float: " + v); RESULT = v; :}
-        ;
+operacoes ::= termos:t operadores_math:y termos:u {: System.out.println("Identificou a operação: "+t+" "+y+" "+u); :} 
+        ; 
 
-tipo ::= TIPO_INT:t {: System.out.println("Tipo: " + t); RESULT = t; :}
-        | TIPO_FLOAT:t {: System.out.println("Tipo: " + t); RESULT = t; :}
-        | TIPO_STRING:t {: System.out.println("Tipo: " + t); RESULT = t; :}
-        | TIPO_BOOL:t {: System.out.println("Tipo: " + t); RESULT = t; :}
-        | KEY_VOID:t {: System.out.println("Tipo: " + t); RESULT = t; :}
-        ;
+// UTILS 
+bloco ::= DL_LCHAVE statements DL_RCHAVE {: System.out.println("bloco"); :} 
+        ; 
 
-tipoFunction ::= KEY_PUBLIC:t {: System.out.println("Tipo de Função: " + t); RESULT = t; :}
-        | KEY_PRIVATE:t {: System.out.println("Tipo de Função: " + t); RESULT = t; :}
-        ;
+valor ::= NUMERO_INT:v {:RESULT = v; System.out.println("Valor inteiro: " + v); :} 
+        | NUMERO_FLOAT:v {: RESULT = v; System.out.println("Valor float: " + v); :} 
+        ; 
 
-operadoresMath ::= OP_MAIS:r {: System.out.println("Operador: " + r); RESULT = r; :}
-        | OP_MINUS:r {: System.out.println("Operador: " + r); RESULT = r; :}
-        | OP_MULTI:r {: System.out.println("Operador: " + r); RESULT = r; :}
-        | OP_DIVI:r {: System.out.println("Operador: " + r); RESULT = r; :}
-        ;
+tipo ::= TIPO_INT:t {: System.out.println("Tipo: " + t); RESULT = t; :} 
+        | TIPO_FLOAT:t {: System.out.println("Tipo: " + t); RESULT = t; :} 
+        | TIPO_STRING:t {: System.out.println("Tipo: " + t); RESULT = t; :} 
+        | TIPO_BOOL:t {: System.out.println("Tipo: " + t); RESULT = t; :} 
+        | KEY_VOID:t {: System.out.println("Tipo: " + t); RESULT = t; :} 
+        ; 
 
-operadores ::= OP_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :}
-        | OP_DIFE:r {: RESULT = r; System.out.println("Operador: " + r); :}
-        | OP_MENORQ:r {: RESULT = r; System.out.println("Operador: " + r); :}
-        | OP_MAIORQ:r {: RESULT = r; System.out.println("Operador: " + r); :}
-        | OP_MAIOR_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :}
+tipo_function ::= KEY_PUBLIC:t {: System.out.println("Tipo de Função: " + t); RESULT = t; :} 
+        | KEY_PRIVATE:t {: System.out.println("Tipo de Função: " + t); RESULT = t; :} 
+        ; 
+
+operadores_math ::= OP_MAIS:r {: System.out.println("Operador: " + r); RESULT = r; :} 
+        | OP_MINUS:r {: System.out.println("Operador: " + r); RESULT = r; :} 
+        | OP_MULTI:r {: System.out.println("Operador: " + r); RESULT = r; :} 
+        | OP_DIVI:r {: System.out.println("Operador: " + r); RESULT = r; :} 
+        ; 
+
+operadores ::= OP_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :} 
+        | OP_DIFE:r {: RESULT = r; System.out.println("Operador: " + r); :} 
+        | OP_MENORQ:r {: RESULT = r; System.out.println("Operador: " + r); :} 
+        | OP_MAIORQ:r {: RESULT = r; System.out.println("Operador: " + r); :} 
+        | OP_MAIOR_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :} 
         | OP_MENOR_IGUAL:r {: RESULT = r; System.out.println("Operador: " + r); :}
         ;
