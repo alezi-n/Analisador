@@ -1,4 +1,7 @@
 # Compilador Básico
+## Equipe
+- Alexandre Henrique - 2210375
+- Renan Bandeira - 2210467
 ## Descrição
   Este projeto implementa um analisador léxico (scanner) e um analisador sintático (parser) utilizando JFlex e CUP. 
   Este guia explica como compilar e executar as diferentes etapas do projeto, usando o script run.bat fornecido como suporte.
